@@ -152,18 +152,21 @@ class MaskedAutoencoderViT(nn.Module):
         N, L, D = x.shape  # batch, length, dim
         len_keep = L - len(mask_pattern)
         
-        ids = np.expand_dims(np.arange(0, L, 1), 0)
-        exchange_loc = L-1
-        for id_ in mask_pattern:
-            ids[:, [exchange_loc, id_]] = ids[:, [id_,exchange_loc]]
-            exchange_loc -= 1
+        ids =  [id_ for id_ in range(L)]
+        ids = [id_ for id_ in ids if id_ not in mask_pattern] 
+        ids.extend(mask_pattern) 
+        ids = np.expand_dims(ids, 0)
+        ids = ids.astype(np.int64)
+
         # make ids a shuffle-like
         ids_shuffle = torch.from_numpy(ids)
+        print(ids_shuffle.dtype)
+        
         # here, ids_shuffle == ids_restore
         ids_restore = torch.argsort(ids_shuffle, dim=1)
         
-        # keep ids
-        ids_keep = ids_restore[:, :len_keep]
+        # keep ids, below same to random masking
+        ids_keep = ids_shuffle[:, :len_keep]
         x_masked = torch.gather(x, dim=1, index=ids_keep.unsqueeze(-1).repeat(1, 1, D))
         
         # generate the binary mask: 0 is keep, 1 is remove
@@ -171,7 +174,6 @@ class MaskedAutoencoderViT(nn.Module):
         mask[:, :len_keep] = 0
         # unshuffle to get the binary mask
         mask = torch.gather(mask, dim=1, index=ids_restore)
-        print('mask', mask)
 
         return x_masked, mask, ids_restore
 
