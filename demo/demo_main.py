@@ -84,10 +84,10 @@ mask_dataset = []
 for mask_line in mask_list:
     mask_dataset.append(list(map(int,mask_line.split(','))))
 
-print (mask_dataset)
+#print (mask_dataset)
 
 # load an image
-img_url = './val/ILSVRC2012_val_00046145.JPEG' # fox
+img_url = './val/ILSVRC2012_val_3.JPEG' # fox
 img = Image.open(img_url)
 img = img.resize((224, 224))
 img = np.array(img) / 255.
@@ -110,5 +110,5 @@ print('Model loaded.')
 # make random mask reproducible (comment out to make it change)
 torch.manual_seed(2)
 print('MAE with pixel reconstruction:')
-run_one_image(img, model_mae, mask_dataset[0])
+run_one_image(img, model_mae, mask_dataset[3])
 #run_one_image(img, model_mae, None)
