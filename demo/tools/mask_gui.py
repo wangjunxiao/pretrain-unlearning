@@ -64,7 +64,6 @@ def corp_img(source_path, save_path, x_begin, y_begin, x_end, y_end):
         region = corp_image.crop((min_x, min_y, max_x, max_y))
         region.save(save_path)
         
-        print(min_x,min_y,max_x,max_y)
         if min_x < 0:   min_x = 0
         if min_x > 224: min_x = 223
         if min_y < 0  : min_y = 0
@@ -76,11 +75,9 @@ def corp_img(source_path, save_path, x_begin, y_begin, x_end, y_end):
         
         min_id=int(min_x/16)+int(min_y/16)*14
         max_id=int(max_x/16)+int(max_y/16)*14
-        print(min_id,max_id)
         
         x_ids = int(max_x/16) - int(min_x/16)
         y_ids = int(max_y/16) - int(min_y/16)
-        print(x_ids,y_ids)
         
         mask_ids = []
         for y_id in range(y_ids+1):
@@ -99,7 +96,7 @@ def corp_img(source_path, save_path, x_begin, y_begin, x_end, y_end):
 
 if __name__ == '__main__':
     pass
-    img_path = './img/ILSVRC2012_val_1.JPEG'
+    img_path = './img/ILSVRC2012_val_3.JPEG'
     image = Image.open(img_path)
     image = image.resize((224, 224))
     image.save('./img/resize.jpg')

@@ -101,14 +101,14 @@ img = img / imagenet_std
 plt.rcParams['figure.figsize'] = [25, 25]
 show_image(torch.tensor(img))
 
-# This is an MAE model trained with an extra GAN loss for more realistic generation (ViT-Large, training mask ratio=0.75)
+# This is an MAE model trained with pixels as targets for visualization (ViT-large, training mask ratio=0.75)
 
-chkpt_dir = './model/mae_visualize_vit_large_ganloss.pth'
-model_mae_gan = prepare_model(chkpt_dir, 'mae_vit_large_patch16')
+chkpt_dir = './model/mae_visualize_vit_large.pth'
+model_mae = prepare_model(chkpt_dir, 'mae_vit_large_patch16')
 print('Model loaded.')
 
 # make random mask reproducible (comment out to make it change)
 torch.manual_seed(2)
-print('MAE with extra GAN loss:')
+print('MAE with pixel reconstruction:')
 run_one_image(img, model_mae, mask_dataset[3])
 #run_one_image(img, model_mae, None)
