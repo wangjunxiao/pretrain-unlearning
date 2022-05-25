@@ -5,6 +5,9 @@ import tkinter as tk
 from PIL import Image
 from PIL import ImageTk
 
+image_size = 224
+patch_size = 16
+
 
 left_mouse_down_x = 0
 left_mouse_down_y = 0
@@ -64,20 +67,23 @@ def corp_img(source_path, save_path, x_begin, y_begin, x_end, y_end):
         region = corp_image.crop((min_x, min_y, max_x, max_y))
         region.save(save_path)
         
-        if min_x < 0:   min_x = 0
-        if min_x > 224: min_x = 223
-        if min_y < 0  : min_y = 0
-        if min_y > 224: min_y = 223
-        if max_x < 0  : max_x = 0
-        if max_x > 224: max_x = 223
-        if max_y < 0  : max_y = 0
-        if max_y > 224: max_y = 223
+        print(min_x,min_y,max_x,max_y)
+        if min_x < 0         : min_x = 0
+        if min_x > image_size: min_x = image_size-1
+        if min_y < 0         : min_y = 0
+        if min_y > image_size: min_y = image_size-1
+        if max_x < 0         : max_x = 0
+        if max_x > patch_size: max_x = image_size-1
+        if max_y < 0         : max_y = 0
+        if max_y > image_size: max_y = image_size-1
         
-        min_id=int(min_x/16)+int(min_y/16)*14
-        max_id=int(max_x/16)+int(max_y/16)*14
+        min_id=int(min_x/patch_size)+int(min_y/patch_size)*int(image_size/patch_size)
+        max_id=int(max_x/patch_size)+int(max_y/patch_size)*int(image_size/patch_size)
+        print(min_id,max_id)
         
-        x_ids = int(max_x/16) - int(min_x/16)
-        y_ids = int(max_y/16) - int(min_y/16)
+        x_ids = int(max_x/patch_size) - int(min_x/patch_size)
+        y_ids = int(max_y/patch_size) - int(min_y/patch_size)
+        print(x_ids,y_ids)
         
         mask_ids = []
         for y_id in range(y_ids+1):
@@ -85,7 +91,7 @@ def corp_img(source_path, save_path, x_begin, y_begin, x_end, y_end):
             for x_id in range(x_ids+1):
                 mask_ids.append(id_)
                 id_ += 1
-            min_id += 14
+            min_id += int(image_size/patch_size)
             
         print('mask_ids', mask_ids)
             
@@ -96,9 +102,9 @@ def corp_img(source_path, save_path, x_begin, y_begin, x_end, y_end):
 
 if __name__ == '__main__':
     pass
-    img_path = './img/ILSVRC2012_val_3.JPEG'
+    img_path = './img/ILSVRC2012_val_5.JPEG'
     image = Image.open(img_path)
-    image = image.resize((224, 224))
+    image = image.resize((image_size, image_size))
     image.save('./img/resize.jpg')
     
     win = tk.Tk()
