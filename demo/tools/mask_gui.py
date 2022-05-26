@@ -73,7 +73,7 @@ def corp_img(source_path, save_path, x_begin, y_begin, x_end, y_end):
         if min_y < 0         : min_y = 0
         if min_y > image_size: min_y = image_size-1
         if max_x < 0         : max_x = 0
-        if max_x > patch_size: max_x = image_size-1
+        if max_x > image_size: max_x = image_size-1
         if max_y < 0         : max_y = 0
         if max_y > image_size: max_y = image_size-1
         
